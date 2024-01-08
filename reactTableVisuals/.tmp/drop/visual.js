@@ -126,7 +126,7 @@ class TableVisual extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
             tableHead: columns,
             tableData: rows,
             title: title,
-            subTitle: subTitle
+            subTitle: subTitle,
         };
     }
     renderTable() {

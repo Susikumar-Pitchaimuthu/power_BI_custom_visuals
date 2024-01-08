@@ -144,11 +144,14 @@ const TableVisual = ({ row, col, title = "Default Title", subtitle = "Default Su
 
 
 
+
 class Visual {
     constructor(options) {
         console.log("Visual constructor", options);
         this.target = options.element;
         this.formattingSettingsService = new powerbi_visuals_utils_formattingmodel__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z();
+        this.helpLinkElement = this.createHelpLinkElement(options.host);
+        options.element.appendChild(this.helpLinkElement);
         this.tableVisual = _table__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z;
     }
     update(options) {
@@ -179,6 +182,16 @@ class Visual {
     }
     getFormattingModel() {
         return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
+    }
+    createHelpLinkElement(host) {
+        let linkElement = document.createElement("a");
+        linkElement.textContent = "?";
+        linkElement.setAttribute("title", "Open documentation");
+        linkElement.setAttribute("class", "helpLink");
+        linkElement.addEventListener("click", () => {
+            host.launchUrl("https://learn.microsoft.com/power-bi/developer/visuals/custom-visual-develop-tutorial");
+        });
+        return linkElement;
     }
     render(rowData, columnData, title, subtitle) {
         react_dom__WEBPACK_IMPORTED_MODULE_1__.render(react__WEBPACK_IMPORTED_MODULE_2__.createElement(this.tableVisual, { row: rowData, col: columnData, title: title, subtitle: subtitle }), this.target);

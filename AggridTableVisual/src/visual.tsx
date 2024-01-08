@@ -8,7 +8,7 @@ import FormattingModel = powerbi.visuals.FormattingModel;
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 import TableVisual from "./table";
-
+import "../style/visual.less"
 interface VisualProps {
   element: HTMLElement;
 }
@@ -17,6 +17,7 @@ export class Visual implements IVisual {
   private target: HTMLElement;
   private formattingSettings: VisualFormattingSettingsModel;
   private formattingSettingsService: FormattingSettingsService;
+  helpLinkElement: Element;
   private tableVisual: React.FC<{
     row: any[];
     col: any[];
@@ -28,13 +29,14 @@ export class Visual implements IVisual {
     console.log("Visual constructor", options);
     this.target = options.element;
     this.formattingSettingsService = new FormattingSettingsService();
+    this.helpLinkElement = this.createHelpLinkElement(options.host); 
+    options.element.appendChild(this.helpLinkElement);
     this.tableVisual = TableVisual;
-  }
+}
 
   public update(options: VisualUpdateOptions) {
     const dataViews = options.dataViews;
     console.log(options);
-
     this.formattingSettings =
       this.formattingSettingsService.populateFormattingSettingsModel(
         VisualFormattingSettingsModel,
@@ -74,6 +76,17 @@ export class Visual implements IVisual {
       this.formattingSettings
     );
   }
+
+  private createHelpLinkElement(host: any): Element {
+    let linkElement = document.createElement("a");
+    linkElement.textContent = "?";
+    linkElement.setAttribute("title", "Open documentation");
+    linkElement.setAttribute("class", "helpLink");
+    linkElement.addEventListener("click", () => {
+        host.launchUrl("https://learn.microsoft.com/power-bi/developer/visuals/custom-visual-develop-tutorial");
+    });
+    return linkElement;
+}
 
   private render(
     rowData: any[],
